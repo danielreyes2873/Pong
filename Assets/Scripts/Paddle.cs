@@ -49,4 +49,9 @@ public class Paddle : MonoBehaviour
         Renderer renderer = GetComponent<Renderer>();
         renderer.material.color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
     }
+
+    // public void resetPaddleSize()
+    // {
+    //     transform.localScale()
+    // }
 }
