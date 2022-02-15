@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -14,6 +15,9 @@ public class Ball : MonoBehaviour
     private Transform lastPaddleTouched;
     public AudioClip bounce;
     private AudioSource audioSource;
+    public TextMeshProUGUI rightScoreText;
+    public TextMeshProUGUI leftScoreText;
+    public Transform camera;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +41,17 @@ public class Ball : MonoBehaviour
     private void LeftScores()
     {
         leftScore++;
+        leftScoreText.text = $"{leftScore}";
+        switch (leftScore)
+        {
+            case > 5 and < 10:
+                leftScoreText.color = Color.blue;
+                break;
+            case 10:
+                leftScoreText.color = Color.red;
+                leftScoreText.fontSize += 10;
+                break;
+        }
         Debug.Log("Left Scored! Game Score: " + leftScore + " - " + rightScore);
         if (leftScore > 10)
         {
@@ -52,6 +67,17 @@ public class Ball : MonoBehaviour
     private void RightScores()
     {
         rightScore++;
+        rightScoreText.text = $"{rightScore}";
+        switch (rightScore)
+        {
+            case > 5 and < 10:
+                rightScoreText.color = Color.blue;
+                break;
+            case 10:
+                rightScoreText.color = Color.red;
+                rightScoreText.fontSize += 10;
+                break;
+        }
         Debug.Log("Right Scored! Game Score: " + leftScore + " - " + rightScore);
         if (rightScore > 10)
         {
@@ -68,10 +94,12 @@ public class Ball : MonoBehaviour
     {
         if (other.name.Equals("Left Goal"))
         {
+            StartCoroutine(Shake(.2f, new Vector3(.5f, .5f, .5f), .8f));
             RightScores();
         }
         else if (other.name.Equals("Right Goal"))
         {
+            StartCoroutine(Shake(.2f, new Vector3(.5f, .5f, .5f), .8f));
             LeftScores();
         }
         else if (other.name.Equals("Ball Speed Power up"))
@@ -136,5 +164,34 @@ public class Ball : MonoBehaviour
         lastPaddleTouched.localScale = new Vector3(0.5f, 1f, 5);
         yield return new WaitForSeconds(10);
         lastPaddleTouched.localScale = new Vector3(0.5f, 1f, 3);
+    }
+
+    IEnumerator Shake(float duration, Vector3 magnitude, float wavelength)
+    {
+        Vector3 originalPos = camera.localPosition;
+        float currentX = 0;
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            // float x = Random.Range(-1f, 1f) * magnitude;
+            // float y = Random.Range(-1f, 1f) * magnitude;
+            // float perlin = Mathf.PerlinNoise(x, y);
+            //
+            // camera.localPosition = new Vector3(perlin, originalPos.y, perlin);
+
+            Vector3 shakeAmount = new Vector3(
+                Mathf.PerlinNoise(currentX,0) - .5f,
+                Mathf.PerlinNoise(currentX,7) - .5f,
+                Mathf.PerlinNoise(currentX,19) - .5f
+                );
+
+            camera.localPosition = Vector3.Scale(magnitude, shakeAmount) + originalPos;
+            currentX += wavelength;
+            elapsed += Time.deltaTime;
+            
+            yield return null;
+        }
+
+        camera.localPosition = originalPos;
     }
 }
