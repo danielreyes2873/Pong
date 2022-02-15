@@ -169,20 +169,14 @@ public class Ball : MonoBehaviour
     IEnumerator Shake(float duration, Vector3 magnitude, float wavelength)
     {
         Vector3 originalPos = camera.localPosition;
-        float currentX = 0;
+        float currentX = 0.0f;
         float elapsed = 0.0f;
         while (elapsed < duration)
         {
-            // float x = Random.Range(-1f, 1f) * magnitude;
-            // float y = Random.Range(-1f, 1f) * magnitude;
-            // float perlin = Mathf.PerlinNoise(x, y);
-            //
-            // camera.localPosition = new Vector3(perlin, originalPos.y, perlin);
-
             Vector3 shakeAmount = new Vector3(
-                Mathf.PerlinNoise(currentX,0) - .5f,
-                Mathf.PerlinNoise(currentX,7) - .5f,
-                Mathf.PerlinNoise(currentX,19) - .5f
+                (Mathf.PerlinNoise(currentX,2.2f) * 2) - 1f,
+                (Mathf.PerlinNoise(currentX,5.5f) * 2) - 1f,
+                (Mathf.PerlinNoise(currentX,8.8f) * 2) - 1f
                 );
 
             camera.localPosition = Vector3.Scale(magnitude, shakeAmount) + originalPos;
