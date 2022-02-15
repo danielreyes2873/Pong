@@ -7,6 +7,12 @@ public class BallSpeedPowerUp : MonoBehaviour
     public float height = 0.5f;
 
     private Vector3 pos;
+    
+    // I realize that movement of the powerups could have been done in one
+    // class but I originally intended to do more than just move the pellets
+    // with these classes. That didn't work out. If I was to optimize this 
+    // code, condensing these classes into one is probably where I'd start.
+    
     // Start is called before the first frame update
     void Start()
     {
